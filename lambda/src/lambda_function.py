@@ -117,7 +117,7 @@ def get_next_game_text():
     if next_game_datetime is None:
         return "I don't see a next game on the calendar."
     else:
-        return "The next game is on " + str(next_game_datetime.date()) + " at " + str(next_game_datetime.time())
+        return "The next game is on " + next_game_datetime.strftime("%A, %B %d at %I:%M%p")
 
 
 def get_next_game_response():
