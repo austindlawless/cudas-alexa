@@ -1,10 +1,10 @@
 {
   "intents": [
     {
-      "intent": "ReadRandomNote"
+      "intent": "NextGame"
     },
     {
-      "intent": "Poop"
+      "intent": "Sacko"
     },
     {
       "intent": "AMAZON.HelpIntent"

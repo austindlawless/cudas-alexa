@@ -6,14 +6,12 @@ import random
 
 # --------------- Globals ------------------------------------------------------
 
-NOT_UNDERSTOOD = "I didn't catch that."
+NOT_UNDERSTOOD = "Charlie says what now? "
 
-WELCOME_MESSAGE = "Welcome to the Alexa Skills Kit sample. " \
-                  "Please tell me your favorite color by saying, " \
-                  "my favorite color is red"
+WELCOME_MESSAGE = "Welcome to the Cudas Alexa Skill. " \
+                  "Find out when the Cudas next play by asking me. "
 
-RE_WELCOME_MESSAGE = "Please tell me your favorite color by saying, " \
-                     "my favorite color is red."
+RE_WELCOME_MESSAGE = "Try asking, when do the Cudas play next? "
 
 # --------------- Helpers that build all of the responses ----------------------
 
@@ -73,7 +71,7 @@ def get_welcome_response():
 
 def handle_session_end_request():
     card_title = "Session Ended"
-    speech_output = "Thank you for studying with the Cloud Guru. " \
+    speech_output = "Thank you for supporting the Cudas! " \
                     "Have a nice day!"
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
@@ -81,18 +79,20 @@ def handle_session_end_request():
         card_title, speech_output, None, should_end_session))
 
 
-def get_random_note():
-    notes_table = boto3.resource('dynamodb').Table('CloudGuruNotes')
-    notes = notes_table.scan()['Items']
-    note = random.choice(notes)
-    return note['text']
+def get_next_game():
+    seasons_table = boto3.resource('dynamodb').Table('cudas_schedule')
+    seasons = seasons_table.scan()['Items']
+    season = random.choice(seasons)
+    games = season['games']
+    game = random.choice(games)
+    return game['date'] + " at " + game['time']
 
 
 def get_random_note_response():
-    card_title = "Cloud Guru Note"
+    card_title = "Cudas: Next Game"
     session_attributes = {}
-    should_end_session = False
-    speech_output = get_random_note()
+    should_end_session = True
+    speech_output = get_next_game()
     reprompt_text = None
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session
@@ -130,7 +130,7 @@ def on_intent(intent_request, session):
     print("intent_name=" + intent_name)
 
     # Dispatch to your skill's intent handlers
-    if intent_name == "ReadRandomNote":
+    if intent_name == "NextGame":
         return get_random_note_response()
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
