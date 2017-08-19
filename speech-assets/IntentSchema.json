@@ -4,7 +4,7 @@
       "intent": "NextGame"
     },
     {
-      "intent": "Sacko"
+      "intent": "Default"
     },
     {
       "intent": "AMAZON.HelpIntent"
