@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import boto3
 import random
+from datetime import datetime
 
 # --------------- Globals ------------------------------------------------------
 
@@ -14,6 +15,7 @@ WELCOME_MESSAGE = "Welcome to the Cudas Alexa Skill. " \
 RE_WELCOME_MESSAGE = "Try asking, when do the Cudas play next? "
 
 # --------------- Helpers that build all of the responses ----------------------
+
 
 def build_speechlet_response(title, output, reprompt_text, should_end_session):
     return {
@@ -82,17 +84,26 @@ def handle_session_end_request():
 def get_next_game():
     seasons_table = boto3.resource('dynamodb').Table('cudas_schedule')
     seasons = seasons_table.scan()['Items']
-    season = random.choice(seasons)
+    season = seasons[0]
     games = season['games']
-    game = random.choice(games)
-    return game['date'] + " at " + game['time'] + "m"
+    game = games[0]
+    return datetime.strptime(game['date'] + "-" + game['time'] + "m", "%m-%d-%Y-%I:%M%p")
+
+
+def get_next_game_text():
+    game_datetime = get_next_game()
+    current_date = datetime.today()
+    if current_date > game_datetime:
+        return "I don't see a next game on the calendar."
+    else:
+        return "The next game is on " + str(game_datetime.date()) + " at " + str(game_datetime.time())
 
 
 def get_random_note_response():
     card_title = "Cudas: Next Game"
     session_attributes = {}
     should_end_session = True
-    speech_output = get_next_game()
+    speech_output = get_next_game_text()
     reprompt_text = None
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session
