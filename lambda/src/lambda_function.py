@@ -85,7 +85,7 @@ def get_next_game():
     season = random.choice(seasons)
     games = season['games']
     game = random.choice(games)
-    return game['date'] + " at " + game['time']
+    return game['date'] + " at " + game['time'] + "m"
 
 
 def get_random_note_response():
