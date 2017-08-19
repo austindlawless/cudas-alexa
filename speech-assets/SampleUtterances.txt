@@ -1,2 +1,8 @@
 NextGame when is the next game
+NextGame when do we play next
+NextGame do we play on Thursday
+StackSacko should i stack on you
+StackSacko should i stack on sacko
+StackSacko should one stack on sacko
+StackSacko what do you think about sacko
 Default default

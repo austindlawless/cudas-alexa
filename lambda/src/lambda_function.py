@@ -9,10 +9,9 @@ from boto3.dynamodb.conditions import Key
 
 NOT_UNDERSTOOD = "Charlie says what now? "
 
-WELCOME_MESSAGE = "Welcome to the Cudas Alexa Skill. " \
-                  "Find out when the Cudas next play by asking me. "
+WELCOME_MESSAGE = "Welcome to the Cudas Alexa Skill. Find out when the Cudas next play by asking me. "
 
-RE_WELCOME_MESSAGE = "Try asking, when do the Cudas play next? "
+RE_WELCOME_MESSAGE = "Try asking, when do the Cudas play next? Or, should I stack on Sacko?"
 
 # --------------- Helpers that build all of the responses ----------------------
 
@@ -132,6 +131,17 @@ def get_next_game_response():
     ))
 
 
+def get_stack_sacko_response():
+    card_title = "Cudas: Don't you stack on Sacko"
+    session_attributes = {}
+    should_end_session = True
+    speech_output = "Don't you stack on Sacko!"
+    reprompt_text = None
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session
+    ))
+
+
 # --------------- Events ------------------
 
 def on_session_started(session_started_request, session):
@@ -165,6 +175,8 @@ def on_intent(intent_request, session):
     # Dispatch to your skill's intent handlers
     if intent_name == "NextGame":
         return get_next_game_response()
+    elif intent_name == "StackSacko":
+        return get_stack_sacko_response()
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
